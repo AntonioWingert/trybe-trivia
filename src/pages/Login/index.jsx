@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Header from '../../components/Header';
 
 class Login extends Component {
   state = {
@@ -42,6 +43,7 @@ class Login extends Component {
           Play
 
         </button>
+        <Header props={ this.props } />
       </form>
     );
   }

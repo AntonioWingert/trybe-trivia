@@ -43,7 +43,7 @@ class Login extends Component {
           Play
 
         </button>
-        <Header props={ this.props } />
+        <Header />
       </form>
     );
   }

@@ -1,30 +1,20 @@
 import React, { Component } from 'react';
-import { shape, func } from 'prop-types';
+import { Link } from 'react-router-dom';
 
 class Header extends Component {
   render() {
-    const { props: { history } } = this.props;
     return (
       <div>
         <p>Header</p>
         <button
           type="button"
           data-testid="btn-settings"
-          onClick={ () => history.push('/settings') }
         >
-          Configurações
+          <Link to="/settings">Configurações</Link>
         </button>
       </div>
     );
   }
 }
-
-Header.propTypes = {
-  props: shape({
-    history: shape({
-      push: func,
-    }),
-  }).isRequired,
-};
 
 export default Header;

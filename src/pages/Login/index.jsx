@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { MD5 } from 'crypto-js';
 import { connect } from 'react-redux';
 import propTypes from 'prop-types';
-import { saveIconOnStore } from '../../Redux/Actions';
+import { saveDataOnStore, saveIconOnStore } from '../../Redux/Actions';
 
 class Login extends Component {
   state = {
@@ -21,11 +21,12 @@ class Login extends Component {
 
   fetchToken = async () => {
     const { dispatch } = this.props;
-    const { email } = this.state;
+    const { name, email } = this.state;
     const url = 'https://opentdb.com/api_token.php?command=request';
     const actualToken = localStorage.getItem('token');
     const gravatarToken = MD5(email).toString();
     dispatch(saveIconOnStore(gravatarToken));
+    dispatch(saveDataOnStore({ name, email }));
 
     if (!actualToken) {
       const res = await fetch(url);
@@ -72,7 +73,12 @@ class Login extends Component {
           Play
 
         </button>
-
+        <button
+          type="button"
+          data-testid="btn-settings"
+        >
+          <Link to="/settings">Configurações</Link>
+        </button>
         { redirectToGame && <Redirect to="/game" />}
       </form>
     );

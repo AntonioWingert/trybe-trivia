@@ -3,7 +3,8 @@ import { Redirect } from 'react-router-dom';
 import { MD5 } from 'crypto-js';
 import { connect } from 'react-redux';
 import propTypes from 'prop-types';
-import { saveIconOnStore } from '../../Redux/Actions';
+import { saveIconOnStore } from '../../redux/Actions';
+import Header from '../../components/Header';
 
 class Login extends Component {
   state = {
@@ -74,6 +75,7 @@ class Login extends Component {
         </button>
 
         { redirectToGame && <Redirect to="/game" />}
+        <Header />
       </form>
     );
   }

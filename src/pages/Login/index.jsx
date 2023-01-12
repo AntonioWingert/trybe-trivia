@@ -4,7 +4,6 @@ import { MD5 } from 'crypto-js';
 import { connect } from 'react-redux';
 import propTypes from 'prop-types';
 import { saveDataOnStore, saveIconOnStore } from '../../redux/Actions';
-import Header from '../../components/Header';
 
 class Login extends Component {
   state = {
@@ -81,7 +80,6 @@ class Login extends Component {
           <Link to="/settings">Configurações</Link>
         </button>
         { redirectToGame && <Redirect to="/game" />}
-        <Header />
       </form>
     );
   }

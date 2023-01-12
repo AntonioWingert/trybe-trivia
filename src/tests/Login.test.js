@@ -1,4 +1,4 @@
-import { screen, waitFor } from "@testing-library/react";
+import { screen, waitFor, waitForElementToBeRemoved } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import App from "../App";
 import renderWithRouterAndRedux from "../tests/helpers/renderWithRouterAndRedux";
@@ -22,19 +22,19 @@ describe('Verificando a page /Login/', () => {
     expect(btn).toBeInTheDocument();
   }); 
 
-  it('Ao escrever o nome e o email o botão é habilitado', () => {
-    const { history } = renderWithRouterAndRedux(<App />)
-    const inputName = screen.getByPlaceholderText('Digite seu Nome')
-    const inputEmail = screen.getByPlaceholderText(/Digite seu Email/i)
-    const btn = screen.getByRole('button', {  name: /play/i})
+  it('Ao escrever o nome e o email o botão é habilitado', async () => {
+    const { history } = renderWithRouterAndRedux(<App />);
+    const inputName = screen.getByPlaceholderText('Digite seu Nome');
+    const inputEmail = screen.getByPlaceholderText(/Digite seu Email/i);
+    const btn = screen.getByRole('button', {  name: /play/i});
     
-    userEvent.type(inputName, 'miguelito')
+    userEvent.type(inputName, 'miguelito');
     expect(btn).toBeDisabled();
-    userEvent.type(inputEmail, 'miguel@novocomputador.com')
+    userEvent.type(inputEmail, 'miguel@novocomputador.com');
     expect(btn).toBeEnabled();
-    userEvent.click(btn)
-    waitFor(() => {
-      expect(history.location.pathname).toBe('/game')
-    })
-  }); 
+    userEvent.click(btn);
+
+    expect(await screen.findByRole('img', {  name: /avatar\-gravatar/i})).toBeInTheDocument();
+    expect(history.location.pathname).toBe('/game');
+    });
 });

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { number, string } from 'prop-types';
+import Header from '../../components/Header';
 
 const THREE = 3;
 
@@ -10,6 +11,7 @@ class Feedback extends Component {
     const urlGravatar = `https://www.gravatar.com/avatar/${gravatarUser}`;
     return (
       <div>
+        <Header />
         <img
           src={ urlGravatar }
           data-testid="header-profile-picture"

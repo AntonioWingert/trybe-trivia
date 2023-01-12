@@ -187,8 +187,8 @@ class Game extends Component {
     const {
       question, category, correct_answer: correctAnswer,
     } = questions[actualQuestion];
-    if (redirectToLogin) (<Redirect to="/" />);
-    if (redirectToFeedback) (<Redirect to="/feedback" />);
+    if (redirectToLogin) return (<Redirect to="/" />);
+    if (redirectToFeedback) return (<Redirect to="/feedback" />);
 
     return (
       <section>

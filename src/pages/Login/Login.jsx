@@ -3,7 +3,7 @@ import { Link, Redirect } from 'react-router-dom';
 import { MD5 } from 'crypto-js';
 import { connect } from 'react-redux';
 import propTypes from 'prop-types';
-import { saveDataOnStore, saveIconOnStore } from '../../Redux/Actions';
+import { saveDataOnStore, saveIconOnStore } from '../../redux/Actions';
 
 class Login extends Component {
   state = {

@@ -1,23 +1,24 @@
 import { screen, waitFor, waitForElementToBeRemoved } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import App from "../App";
-import renderWithRouterAndRedux from "../tests/helpers/renderWithRouterAndRedux";
+import Login from "../pages/Login/Login";
+import renderWithRouterAndRedux from "./helpers/renderWithRouterAndRedux";
 
 describe('Verificando a page /Login/', () => {
   it('Verificando de o input /name/ é renderizado', () => {
-    renderWithRouterAndRedux(<App />)
+    renderWithRouterAndRedux(<Login />)
     const inputName = screen.getByPlaceholderText('Digite seu Nome')
     expect(inputName).toBeInTheDocument();
   }); 
 
   it('Verificando de o input /email/ é renderizado', () => {
-    renderWithRouterAndRedux(<App />)
+    renderWithRouterAndRedux(<Login />)
     const inputEmail = screen.getByPlaceholderText(/Digite seu Email/i)
     expect(inputEmail).toBeInTheDocument();
   }); 
 
   it('Verificando de o input /botão/ é renderizado', () => {
-    renderWithRouterAndRedux(<App />)
+    renderWithRouterAndRedux(<Login />)
     const btn = screen.getByRole('button', {  name: /play/i})
     expect(btn).toBeInTheDocument();
   }); 

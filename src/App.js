@@ -2,7 +2,7 @@ import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import './App.css';
 import Game from './pages/Game';
-import Login from './pages/Login';
+import Login from './pages/Login/Login';
 import Settings from './pages/Settings/Settings';
 
 export default function App() {

@@ -96,15 +96,15 @@ class Game extends Component {
   };
 
   sumScorePoints = ({ target: { value } }) => {
-    this.setState({ revealQuests: true });
     const { dispatch } = this.props;
     const { revealQuests, actualQuestion, questions } = this.state;
-    const { correct_answer: correctAnswer, difficulty } = questions[actualQuestion];
-    if (!revealQuests && value === correctAnswer) {
-      const scoreActualQuestion = TEN + (1 * this.handleDifficultyScore(difficulty));
-      dispatch(saveNewQuestionScore(scoreActualQuestion));
-      console.log(correctAnswer);
-    }
+    this.setState({ revealQuests: true }, () => {
+      const { correct_answer: correctAnswer, difficulty } = questions[actualQuestion];
+      if (!revealQuests && value === correctAnswer) {
+        const scoreActualQuestion = TEN + (1 * this.handleDifficultyScore(difficulty));
+        dispatch(saveNewQuestionScore(scoreActualQuestion));
+      }
+    });
   };
 
   onClickReveal = (answer) => {

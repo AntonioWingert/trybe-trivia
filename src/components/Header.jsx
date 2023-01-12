@@ -5,18 +5,17 @@ import propTypes from 'prop-types';
 
 class Header extends Component {
   render() {
-    const { gravatarUser, userName } = this.props;
+    const { gravatarUser, player, lastScore } = this.props;
     const urlGravatar = `https://www.gravatar.com/avatar/${gravatarUser}`;
     return (
       <div>
-        <p data-testid="header-player-name">{userName}</p>
+        <p data-testid="header-player-name">{player}</p>
         <img
           src={ urlGravatar }
           data-testid="header-profile-picture"
           alt="avatar-gravatar"
         />
-        <p data-testid="header-score">0</p>
-
+        <p data-testid="header-score">{ lastScore }</p>
         <button
           type="button"
           data-testid="btn-settings"
@@ -29,13 +28,15 @@ class Header extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  gravatarUser: state.gravatarReducer.gravatarUser,
-  userName: state.userReducer.name,
+  gravatarUser: state.player.gravatarEmail,
+  player: state.player.name,
+  lastScore: state.player.score,
 });
 
 Header.propTypes = {
   gravatarUser: propTypes.string.isRequired,
-  userName: propTypes.string.isRequired,
+  player: propTypes.string.isRequired,
+  lastScore: propTypes.number.isRequired,
 };
 
 export default connect(mapStateToProps)(Header);

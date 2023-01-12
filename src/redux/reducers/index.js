@@ -1,7 +1,6 @@
 import { combineReducers } from 'redux';
-import gravatarReducer from './gravatarreducer';
-import userReducer from './user';
+import player from './player';
 
-const rootReducer = combineReducers({ gravatarReducer, userReducer });
+const rootReducer = combineReducers({ player });
 
 export default rootReducer;

@@ -1,13 +1,19 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+import { func } from 'prop-types';
 import Header from '../../components/Header';
+import { saveNewQuestionScore } from '../../redux/Actions';
 
 const RANDOM = 0.5;
 const INDEX = { count: -1 };
 const TIME_LIMIT = 0;
+const TEN = 10;
+const THREE = 3;
 
 class Game extends Component {
   state = {
+    redirectToFeedback: false,
     redirectToLogin: false,
     questions: [{
       category: '',
@@ -81,6 +87,9 @@ class Game extends Component {
   changeQuestion = () => {
     const { actualQuestion } = this.state;
     const limitQuestions = 4;
+    if (actualQuestion === limitQuestions) {
+      this.setState({ redirectToFeedback: true });
+    }
     if (actualQuestion < limitQuestions) {
       this.setState((prevState) => ({
         actualQuestion: prevState.actualQuestion + 1,
@@ -88,6 +97,27 @@ class Game extends Component {
       }));
     }
     this.timer();
+  };
+
+  handleDifficultyScore = (difficulty) => {
+    if (difficulty === 'easy') {
+      return 1;
+    } if (difficulty === 'medium') {
+      return 2;
+    }
+    return THREE;
+  };
+
+  sumScorePoints = ({ target: { value } }) => {
+    const { dispatch } = this.props;
+    const { revealQuests, actualQuestion, questions, time } = this.state;
+    this.setState({ revealQuests: true }, () => {
+      const { correct_answer: correctAnswer, difficulty } = questions[actualQuestion];
+      if (!revealQuests && value === correctAnswer) {
+        const scoreActualQuestion = TEN + (time * this.handleDifficultyScore(difficulty));
+        dispatch(saveNewQuestionScore(scoreActualQuestion));
+      }
+    });
   };
 
   onClickReveal = (answer) => {
@@ -112,19 +142,14 @@ class Game extends Component {
   timer = () => {
     const { time, intervalId } = this.state;
     const ONE_SECOND = 1000;
-
     if (intervalId) {
       this.setState({
         time: 30,
         intervalId: '',
       });
     }
-
     if (time === 0) {
-      this.setState({
-        time: 30,
-        intervalId: '',
-      });
+      this.setState({ time: 30, intervalId: '' });
     }
 
     const timer = setInterval(
@@ -141,10 +166,7 @@ class Game extends Component {
 
   timerValidator = () => {
     const { time } = this.state;
-
-    if (time === TIME_LIMIT) {
-      return true;
-    }
+    if (time === TIME_LIMIT) return true;
   };
 
   verifyTimerInZero = () => {
@@ -154,6 +176,7 @@ class Game extends Component {
 
   render() {
     const {
+      redirectToFeedback,
       redirectToLogin,
       randomAnswers,
       actualQuestion,
@@ -164,26 +187,19 @@ class Game extends Component {
     const {
       question, category, correct_answer: correctAnswer,
     } = questions[actualQuestion];
-
-    if (redirectToLogin) {
-      return (
-        <Redirect to="/" />
-      );
-    }
+    if (redirectToLogin) (<Redirect to="/" />);
+    if (redirectToFeedback) (<Redirect to="/feedback" />);
 
     return (
       <section>
         <Header />
-
         <section>
           <p>
             Tempo Restante:
-            {' '}
             {time}
           </p>
           <h2 data-testid="question-text">
             {question}
-
           </h2>
           <h3
             data-testid="question-category"
@@ -201,12 +217,12 @@ class Game extends Component {
                   ? 'correct-answer'
                   : `wrong-answer-${this.handleIndex()}`
               }
+              value={ answer }
               className={ this.onClickReveal(answer) }
-              onClick={ () => this.setState({ revealQuests: true }) }
               disabled={ this.timerValidator() }
+              onClick={ (event) => this.sumScorePoints(event) }
             >
               {answer}
-
             </button>
           ))}
         </div>
@@ -227,4 +243,8 @@ class Game extends Component {
   }
 }
 
-export default Game;
+Game.propTypes = {
+  dispatch: func.isRequired,
+};
+
+export default connect()(Game);

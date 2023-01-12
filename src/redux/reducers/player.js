@@ -1,24 +1,28 @@
-import { SAVE_DATA_LOGIN, UPDATE_SCORE } from '../Actions';
+import { SAVE_DATA_LOGIN, SAVE_GRAVATAR, UPDATE_SCORE } from '../Actions';
 
 const INITIAL_STATE = {
   name: '',
-  email: '',
+  gravatarEmail: '',
   score: 0,
+  assertions: 0,
 };
 
-const playerReducer = (state = INITIAL_STATE, action) => {
+const player = (state = INITIAL_STATE, action) => {
   switch (action.type) {
   case SAVE_DATA_LOGIN: return {
     ...state,
     name: action.data.name,
-    email: action.data.email,
   };
   case UPDATE_SCORE: return {
     ...state,
     score: state.score + action.payload,
   };
+  case SAVE_GRAVATAR: return {
+    ...state,
+    gravatarEmail: action.hash,
+  };
   default: return state;
   }
 };
 
-export default playerReducer;
+export default player;

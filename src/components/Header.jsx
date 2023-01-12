@@ -5,7 +5,7 @@ import propTypes from 'prop-types';
 
 class Header extends Component {
   render() {
-    const { gravatarUser, player, score } = this.props;
+    const { gravatarUser, player, lastScore } = this.props;
     const urlGravatar = `https://www.gravatar.com/avatar/${gravatarUser}`;
     return (
       <div>
@@ -15,7 +15,7 @@ class Header extends Component {
           data-testid="header-profile-picture"
           alt="avatar-gravatar"
         />
-        <p data-testid="header-score">{ score }</p>
+        <p data-testid="header-score">{ lastScore }</p>
         <button
           type="button"
           data-testid="btn-settings"
@@ -28,15 +28,15 @@ class Header extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  gravatarUser: state.gravatarReducer.gravatarUser,
-  player: state.playerReducer.name,
-  score: state.playerReducer.score,
+  gravatarUser: state.player.gravatarEmail,
+  player: state.player.name,
+  lastScore: state.player.score,
 });
 
 Header.propTypes = {
   gravatarUser: propTypes.string.isRequired,
   player: propTypes.string.isRequired,
-  score: propTypes.number.isRequired,
+  lastScore: propTypes.number.isRequired,
 };
 
 export default connect(mapStateToProps)(Header);

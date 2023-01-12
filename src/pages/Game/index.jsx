@@ -7,11 +7,13 @@ import { saveNewQuestionScore } from '../../redux/Actions';
 
 const RANDOM = 0.5;
 const INDEX = { count: -1 };
+const TIME_LIMIT = 0;
 const TEN = 10;
 const THREE = 3;
 
 class Game extends Component {
   state = {
+    redirectToFeedback: false,
     redirectToLogin: false,
     questions: [{
       category: '',
@@ -23,14 +25,18 @@ class Game extends Component {
     randomAnswers: [],
     actualQuestion: 0,
     revealQuests: false,
+    time: 30,
+    intervalId: '',
+    points: '',
   };
 
   componentDidMount() {
     this.fetchQuestions();
+    this.timer();
   }
 
   componentDidUpdate(_, prevState) {
-    const { questions, actualQuestion } = this.state;
+    const { questions, actualQuestion, time } = this.state;
     const {
       correct_answer: correct,
       incorrect_answers: incorrect,
@@ -39,6 +45,10 @@ class Game extends Component {
       this.setState({
         randomAnswers: this.auxRandomize(correct, incorrect),
       });
+    }
+
+    if (time === 0) {
+      this.verifyTimerInZero();
     }
   }
 
@@ -77,16 +87,19 @@ class Game extends Component {
   changeQuestion = () => {
     const { actualQuestion } = this.state;
     const limitQuestions = 4;
+    if (actualQuestion === limitQuestions) {
+      this.setState({ redirectToFeedback: true });
+    }
     if (actualQuestion < limitQuestions) {
       this.setState((prevState) => ({
         actualQuestion: prevState.actualQuestion + 1,
         revealQuests: false,
       }));
     }
+    this.timer();
   };
 
   handleDifficultyScore = (difficulty) => {
-    console.log(difficulty);
     if (difficulty === 'easy') {
       return 1;
     } if (difficulty === 'medium') {
@@ -97,19 +110,22 @@ class Game extends Component {
 
   sumScorePoints = ({ target: { value } }) => {
     const { dispatch } = this.props;
-    const { revealQuests, actualQuestion, questions } = this.state;
+    const { revealQuests, actualQuestion, questions, time } = this.state;
     this.setState({ revealQuests: true }, () => {
       const { correct_answer: correctAnswer, difficulty } = questions[actualQuestion];
       if (!revealQuests && value === correctAnswer) {
-        const scoreActualQuestion = TEN + (1 * this.handleDifficultyScore(difficulty));
+        const scoreActualQuestion = TEN + (time * this.handleDifficultyScore(difficulty));
         dispatch(saveNewQuestionScore(scoreActualQuestion));
       }
     });
   };
 
   onClickReveal = (answer) => {
-    const { revealQuests, actualQuestion, questions } = this.state;
+    const { revealQuests, actualQuestion, questions, intervalId } = this.state;
     const { correct_answer: correctAnswer } = questions[actualQuestion];
+    if (revealQuests === true) {
+      clearInterval(intervalId);
+    }
     if (revealQuests && answer === correctAnswer) {
       return 'green';
     } if (revealQuests) {
@@ -123,32 +139,67 @@ class Game extends Component {
     return INDEX.count;
   };
 
+  timer = () => {
+    const { time, intervalId } = this.state;
+    const ONE_SECOND = 1000;
+    if (intervalId) {
+      this.setState({
+        time: 30,
+        intervalId: '',
+      });
+    }
+    if (time === 0) {
+      this.setState({ time: 30, intervalId: '' });
+    }
+
+    const timer = setInterval(
+      () => {
+        this.setState((prevState) => ({
+          ...prevState,
+          time: prevState.time - 1,
+          intervalId: timer,
+        }));
+      },
+      ONE_SECOND,
+    );
+  };
+
+  timerValidator = () => {
+    const { time } = this.state;
+    if (time === TIME_LIMIT) return true;
+  };
+
+  verifyTimerInZero = () => {
+    const { intervalId } = this.state;
+    clearInterval(intervalId);
+  };
+
   render() {
     const {
+      redirectToFeedback,
       redirectToLogin,
       randomAnswers,
       actualQuestion,
       questions,
       revealQuests,
+      time,
     } = this.state;
     const {
       question, category, correct_answer: correctAnswer,
     } = questions[actualQuestion];
-
-    if (redirectToLogin) {
-      return (
-        <Redirect to="/" />
-      );
-    }
+    if (redirectToLogin) (<Redirect to="/" />);
+    if (redirectToFeedback) (<Redirect to="/feedback" />);
 
     return (
       <section>
         <Header />
-
         <section>
+          <p>
+            Tempo Restante:
+            {time}
+          </p>
           <h2 data-testid="question-text">
             {question}
-
           </h2>
           <h3
             data-testid="question-category"
@@ -168,15 +219,15 @@ class Game extends Component {
               }
               value={ answer }
               className={ this.onClickReveal(answer) }
+              disabled={ this.timerValidator() }
               onClick={ (event) => this.sumScorePoints(event) }
             >
               {answer}
-
             </button>
           ))}
         </div>
         {
-          revealQuests
+          revealQuests || time === 0
             ? (
               <button
                 type="button"

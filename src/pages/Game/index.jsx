@@ -4,6 +4,7 @@ import { Redirect } from 'react-router-dom';
 import { func } from 'prop-types';
 import Header from '../../components/Header';
 import { saveNewQuestionScore } from '../../redux/Actions';
+import fetchApi from '../../services/api';
 
 const RANDOM = 0.5;
 const INDEX = { count: -1 };
@@ -54,9 +55,7 @@ class Game extends Component {
 
   fetchQuestions = async () => {
     const actualToken = localStorage.getItem('token');
-    const url = `https://opentdb.com/api.php?amount=5&token=${actualToken}`;
-    const res = await fetch(url);
-    const data = await res.json();
+    const data = await fetchApi(actualToken);
     const RESPONSE_CODE = 3;
 
     if (data.response_code === RESPONSE_CODE) {
@@ -84,11 +83,20 @@ class Game extends Component {
     return randomAnswers;
   };
 
+  createPlayer = (name, gravatarEmail, assertions, score) => {
+    const players = JSON.parse(localStorage.getItem('PLAYERS')) || [];
+    const player = { name, gravatarEmail, assertions, score };
+    const newScore = [...players, player];
+    localStorage.setItem('PLAYERS', JSON.stringify(newScore));
+  };
+
   changeQuestion = () => {
     const { actualQuestion } = this.state;
+    const { name, gravatarEmail, assertions, score } = this.props;
     const limitQuestions = 4;
     if (actualQuestion === limitQuestions) {
       this.setState({ redirectToFeedback: true });
+      this.createPlayer(name, gravatarEmail, assertions, score);
     }
     if (actualQuestion < limitQuestions) {
       this.setState((prevState) => ({
@@ -242,9 +250,15 @@ class Game extends Component {
     );
   }
 }
+const mapStateToProps = (state) => ({
+  assertions: state.player.assertions,
+  gravatarEmail: state.player.gravatarEmail,
+  name: state.player.name,
+  score: state.player.score,
+});
 
 Game.propTypes = {
   dispatch: func.isRequired,
 };
 
-export default connect()(Game);
+export default connect(mapStateToProps)(Game);

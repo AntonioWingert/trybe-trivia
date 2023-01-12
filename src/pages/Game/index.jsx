@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { func } from 'prop-types';
 import Header from '../../components/Header';
-import { saveNewQuestionScore } from '../../redux/Actions';
+import { saveNewQuestionScore, updateCorrectAnswers } from '../../redux/Actions';
 
 const RANDOM = 0.5;
 const INDEX = { count: -1 };
@@ -37,14 +37,10 @@ class Game extends Component {
 
   componentDidUpdate(_, prevState) {
     const { questions, actualQuestion, time } = this.state;
-    const {
-      correct_answer: correct,
-      incorrect_answers: incorrect,
+    const { correct_answer: correct, incorrect_answers: incorrect,
     } = questions[actualQuestion];
     if (prevState.actualQuestion !== actualQuestion) {
-      this.setState({
-        randomAnswers: this.auxRandomize(correct, incorrect),
-      });
+      this.setState({ randomAnswers: this.auxRandomize(correct, incorrect) });
     }
 
     if (time === 0) {
@@ -61,15 +57,11 @@ class Game extends Component {
 
     if (data.response_code === RESPONSE_CODE) {
       localStorage.removeItem('token');
-      this.setState({
-        redirectToLogin: true,
-      });
+      this.setState({ redirectToLogin: true });
       return;
     }
 
-    const {
-      correct_answer: correctQuest,
-      incorrect_answers: incorrectQuest,
+    const { correct_answer: correctQuest, incorrect_answers: incorrectQuest,
     } = data.results[0];
 
     this.setState({
@@ -116,6 +108,7 @@ class Game extends Component {
       if (!revealQuests && value === correctAnswer) {
         const scoreActualQuestion = TEN + (time * this.handleDifficultyScore(difficulty));
         dispatch(saveNewQuestionScore(scoreActualQuestion));
+        dispatch(updateCorrectAnswers());
       }
     });
   };
@@ -143,10 +136,7 @@ class Game extends Component {
     const { time, intervalId } = this.state;
     const ONE_SECOND = 1000;
     if (intervalId) {
-      this.setState({
-        time: 30,
-        intervalId: '',
-      });
+      this.setState({ time: 30, intervalId: '' });
     }
     if (time === 0) {
       this.setState({ time: 30, intervalId: '' });
@@ -175,18 +165,10 @@ class Game extends Component {
   };
 
   render() {
+    const { redirectToFeedback, redirectToLogin, randomAnswers, actualQuestion,
+      questions, revealQuests, time } = this.state;
     const {
-      redirectToFeedback,
-      redirectToLogin,
-      randomAnswers,
-      actualQuestion,
-      questions,
-      revealQuests,
-      time,
-    } = this.state;
-    const {
-      question, category, correct_answer: correctAnswer,
-    } = questions[actualQuestion];
+      question, category, correct_answer: correctAnswer } = questions[actualQuestion];
     if (redirectToLogin) return (<Redirect to="/" />);
     if (redirectToFeedback) return (<Redirect to="/feedback" />);
 

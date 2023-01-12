@@ -9,12 +9,12 @@ class FeedbackCard extends Component {
       <div>
         <p>
           {'Você acertou '}
-          <span data-testid="feedback-total-score">{assertions}</span>
+          <span data-testid="feedback-total-question">{assertions}</span>
           {' Perguntas!'}
         </p>
         <p>
           {'Você fez '}
-          <span data-testid="feedback-total-question">{score}</span>
+          <span data-testid="feedback-total-score">{score}</span>
           {' Pontos!'}
         </p>
       </div>

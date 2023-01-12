@@ -3,9 +3,10 @@ import { SAVE_DATA_LOGIN } from '../Actions';
 const INITIAL_STATE = {
   name: '',
   email: '',
+  score: 0,
 };
 
-const userReducer = (state = INITIAL_STATE, action) => {
+const playerReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
   case SAVE_DATA_LOGIN: return {
     ...state,
@@ -16,4 +17,4 @@ const userReducer = (state = INITIAL_STATE, action) => {
   }
 };
 
-export default userReducer;
+export default playerReducer;

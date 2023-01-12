@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import FeedbackCard from '../../components/FeedbackCard';
 
-export default class Feedback extends Component {
+class Feedback extends Component {
   render() {
     return (
       <div>
-        <div data-testid="feedback-text">Feedback</div>
+        <div data-testid="feedback-text">
+          <FeedbackCard />
+        </div>
         <button
           type="button"
           data-testid="btn-play-again"
@@ -23,3 +26,5 @@ export default class Feedback extends Component {
     );
   }
 }
+
+export default Feedback;

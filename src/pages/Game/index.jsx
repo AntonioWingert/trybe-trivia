@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+import { func } from 'prop-types';
 import Header from '../../components/Header';
+import { saveNewQuestionScore } from '../../redux/Actions';
 
 const RANDOM = 0.5;
 const INDEX = { count: -1 };
+const TEN = 10;
+const THREE = 3;
 
 class Game extends Component {
   state = {
@@ -80,6 +85,28 @@ class Game extends Component {
     }
   };
 
+  handleDifficultyScore = (difficulty) => {
+    console.log(difficulty);
+    if (difficulty === 'easy') {
+      return 1;
+    } if (difficulty === 'medium') {
+      return 2;
+    }
+    return THREE;
+  };
+
+  sumScorePoints = ({ target: { value } }) => {
+    this.setState({ revealQuests: true });
+    const { dispatch } = this.props;
+    const { revealQuests, actualQuestion, questions } = this.state;
+    const { correct_answer: correctAnswer, difficulty } = questions[actualQuestion];
+    if (!revealQuests && value === correctAnswer) {
+      const scoreActualQuestion = TEN + (1 * this.handleDifficultyScore(difficulty));
+      dispatch(saveNewQuestionScore(scoreActualQuestion));
+      console.log(correctAnswer);
+    }
+  };
+
   onClickReveal = (answer) => {
     const { revealQuests, actualQuestion, questions } = this.state;
     const { correct_answer: correctAnswer } = questions[actualQuestion];
@@ -139,8 +166,9 @@ class Game extends Component {
                   ? 'correct-answer'
                   : `wrong-answer-${this.handleIndex()}`
               }
+              value={ answer }
               className={ this.onClickReveal(answer) }
-              onClick={ () => this.setState({ revealQuests: true }) }
+              onClick={ (event) => this.sumScorePoints(event) }
             >
               {answer}
 
@@ -164,4 +192,8 @@ class Game extends Component {
   }
 }
 
-export default Game;
+Game.propTypes = {
+  dispatch: func.isRequired,
+};
+
+export default connect()(Game);

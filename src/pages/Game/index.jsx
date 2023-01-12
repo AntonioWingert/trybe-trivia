@@ -4,6 +4,7 @@ import Header from '../../components/Header';
 
 const RANDOM = 0.5;
 const INDEX = { count: -1 };
+const TIME_LIMIT = 0;
 
 class Game extends Component {
   state = {
@@ -18,14 +19,18 @@ class Game extends Component {
     randomAnswers: [],
     actualQuestion: 0,
     revealQuests: false,
+    time: 30,
+    intervalId: '',
+    points: '',
   };
 
   componentDidMount() {
     this.fetchQuestions();
+    this.timer();
   }
 
   componentDidUpdate(_, prevState) {
-    const { questions, actualQuestion } = this.state;
+    const { questions, actualQuestion, time } = this.state;
     const {
       correct_answer: correct,
       incorrect_answers: incorrect,
@@ -34,6 +39,10 @@ class Game extends Component {
       this.setState({
         randomAnswers: this.auxRandomize(correct, incorrect),
       });
+    }
+
+    if (time === 0) {
+      this.verifyTimerInZero();
     }
   }
 
@@ -78,11 +87,15 @@ class Game extends Component {
         revealQuests: false,
       }));
     }
+    this.timer();
   };
 
   onClickReveal = (answer) => {
-    const { revealQuests, actualQuestion, questions } = this.state;
+    const { revealQuests, actualQuestion, questions, intervalId } = this.state;
     const { correct_answer: correctAnswer } = questions[actualQuestion];
+    if (revealQuests === true) {
+      clearInterval(intervalId);
+    }
     if (revealQuests && answer === correctAnswer) {
       return 'green';
     } if (revealQuests) {
@@ -96,6 +109,49 @@ class Game extends Component {
     return INDEX.count;
   };
 
+  timer = () => {
+    const { time, intervalId } = this.state;
+    const ONE_SECOND = 1000;
+
+    if (intervalId) {
+      this.setState({
+        time: 30,
+        intervalId: '',
+      });
+    }
+
+    if (time === 0) {
+      this.setState({
+        time: 30,
+        intervalId: '',
+      });
+    }
+
+    const timer = setInterval(
+      () => {
+        this.setState((prevState) => ({
+          ...prevState,
+          time: prevState.time - 1,
+          intervalId: timer,
+        }));
+      },
+      ONE_SECOND,
+    );
+  };
+
+  timerValidator = () => {
+    const { time } = this.state;
+
+    if (time === TIME_LIMIT) {
+      return true;
+    }
+  };
+
+  verifyTimerInZero = () => {
+    const { intervalId } = this.state;
+    clearInterval(intervalId);
+  };
+
   render() {
     const {
       redirectToLogin,
@@ -103,6 +159,7 @@ class Game extends Component {
       actualQuestion,
       questions,
       revealQuests,
+      time,
     } = this.state;
     const {
       question, category, correct_answer: correctAnswer,
@@ -119,6 +176,11 @@ class Game extends Component {
         <Header />
 
         <section>
+          <p>
+            Tempo Restante:
+            {' '}
+            {time}
+          </p>
           <h2 data-testid="question-text">
             {question}
 
@@ -141,6 +203,7 @@ class Game extends Component {
               }
               className={ this.onClickReveal(answer) }
               onClick={ () => this.setState({ revealQuests: true }) }
+              disabled={ this.timerValidator() }
             >
               {answer}
 
@@ -148,7 +211,7 @@ class Game extends Component {
           ))}
         </div>
         {
-          revealQuests
+          revealQuests || time === 0
             ? (
               <button
                 type="button"

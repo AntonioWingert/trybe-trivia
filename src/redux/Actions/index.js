@@ -18,6 +18,7 @@ export const saveNewQuestionScore = (score) => ({
   payload: score,
 });
 
-export const updateCorrectAnswers = () => ({
+export const updateCorrectAnswers = (assertion) => ({
   type: UPDATE_CORRECT_ANSWERS,
+  assertion,
 });

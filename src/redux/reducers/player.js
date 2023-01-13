@@ -17,7 +17,7 @@ const player = (state = INITIAL_STATE, action) => {
   };
   case UPDATE_SCORE: return {
     ...state,
-    score: state.score + action.payload,
+    score: action.payload,
   };
   case SAVE_GRAVATAR: return {
     ...state,
@@ -25,7 +25,7 @@ const player = (state = INITIAL_STATE, action) => {
   };
   case UPDATE_CORRECT_ANSWERS: return {
     ...state,
-    assertions: state.assertions + 1,
+    assertions: action.assertion,
   };
   default: return state;
   }

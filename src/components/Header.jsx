@@ -15,7 +15,7 @@ class Header extends Component {
           data-testid="header-profile-picture"
           alt="avatar-gravatar"
         />
-        <p data-testid="header-score">{ lastScore }</p>
+        <p data-testid="header-score">{lastScore}</p>
         <button
           type="button"
           data-testid="btn-settings"

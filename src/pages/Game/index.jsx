@@ -124,9 +124,11 @@ class Game extends Component {
   };
 
   onClickReveal = (answer) => {
-    const { revealQuests, actualQuestion, questions, intervalId } = this.state;
+    const { revealQuests, actualQuestion, questions, intervalId, points } = this.state;
+    const { dispatch } = this.props;
     const { correct_answer: correctAnswer } = questions[actualQuestion];
     if (revealQuests === true) {
+      dispatch(saveNewQuestionScore(points));
       clearInterval(intervalId);
     }
     if (revealQuests && answer === correctAnswer) {

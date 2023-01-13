@@ -1,15 +1,59 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { number, string } from 'prop-types';
+import { connect } from 'react-redux';
+import FeedbackCard from '../../components/FeedbackCard';
+import Header from '../../components/Header';
 
-export default class Feedback extends Component {
+const THREE = 3;
+
+class Feedback extends Component {
   render() {
+    const { gravatarUser, assertions } = this.props;
+    const urlGravatar = `https://www.gravatar.com/avatar/${gravatarUser}`;
     return (
-      <div data-testid="feedback-text">
-        <button data-testid="btn-ranking" type="button">
-          <Link to="/ranking">ranking</Link>
+      <div>
+        <Header />
+        <img
+          src={ urlGravatar }
+          data-testid="header-profile-picture"
+          alt="avatar-gravatar"
+        />
+        {assertions < THREE ? (
+          <h3 data-testid="feedback-text">Could be better...</h3>)
+          : (<h3 data-testid="feedback-text">Well Done!</h3>)}
+        <div>
+          <div data-testid="feedback-text">
+            <FeedbackCard />
+          </div>
+        </div>
+        <button
+          type="button"
+          data-testid="btn-play-again"
+        >
+          <Link to="/">Play Again</Link>
         </button>
 
+        <button
+          type="button"
+          data-testid="btn-ranking"
+        >
+          <Link to="/ranking">Ranking</Link>
+        </button>
       </div>
     );
   }
 }
+
+const mapStateToProps = ({ player: { gravatarEmail, assertions, score } }) => ({
+  gravatarUser: gravatarEmail,
+  assertions,
+  score,
+});
+
+Feedback.propTypes = {
+  gravatarUser: string.isRequired,
+  assertions: number.isRequired,
+};
+
+export default connect(mapStateToProps)(Feedback);

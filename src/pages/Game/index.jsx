@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { func, number, string } from 'prop-types';
+import { func, string } from 'prop-types';
 import Header from '../../components/Header';
 import fetchApi from '../../services/api';
 import { saveNewQuestionScore, updateCorrectAnswers } from '../../redux/Actions';
@@ -29,11 +29,14 @@ class Game extends Component {
     time: 30,
     intervalId: '',
     assertions: 0,
+    points: 0,
   };
 
   componentDidMount() {
+    const { dispatch } = this.props;
     this.fetchQuestions();
     this.timer();
+    dispatch(saveNewQuestionScore(0));
   }
 
   componentDidUpdate(_, prevState) {
@@ -43,7 +46,6 @@ class Game extends Component {
     if (prevState.actualQuestion !== actualQuestion) {
       this.setState({ randomAnswers: this.auxRandomize(correct, incorrect) });
     }
-
     if (time === 0) {
       this.verifyTimerInZero();
     }
@@ -53,16 +55,13 @@ class Game extends Component {
     const actualToken = localStorage.getItem('token');
     const data = await fetchApi(actualToken);
     const RESPONSE_CODE = 3;
-
     if (data.response_code === RESPONSE_CODE) {
       localStorage.removeItem('token');
       this.setState({ redirectToLogin: true });
       return;
     }
-
     const { correct_answer: correctQuest, incorrect_answers: incorrectQuest,
     } = data.results[0];
-
     this.setState({
       questions: data.results,
       randomAnswers: this.auxRandomize(correctQuest, incorrectQuest),
@@ -76,30 +75,34 @@ class Game extends Component {
   };
 
   createPlayer = (name, gravatarEmail, assertions, score) => {
+    const { dispatch } = this.props;
     const players = JSON.parse(localStorage.getItem('PLAYERS')) || [];
     const player = { name, gravatarEmail, assertions, score };
     const newScore = [...players, player];
+    dispatch(updateCorrectAnswers(assertions));
     localStorage.setItem('PLAYERS', JSON.stringify(newScore));
+    this.setState({ redirectToFeedback: true, assertions: 0 });
   };
 
   changeQuestion = () => {
-    const { actualQuestion } = this.state;
-    const { name, gravatarEmail, assertions, score } = this.props;
+    const { actualQuestion, assertions, points } = this.state;
+    const { name, gravatarEmail, dispatch } = this.props;
     const limitQuestions = 4;
     if (actualQuestion === limitQuestions) {
-      this.setState({ redirectToFeedback: true });
-      this.createPlayer(name, gravatarEmail, assertions, score);
+      this.createPlayer(name, gravatarEmail, assertions, points);
     }
     if (actualQuestion < limitQuestions) {
       this.setState((prevState) => ({
-        actualQuestion: prevState.actualQuestion + 1,
-        revealQuests: false,
-      }));
+        actualQuestion: prevState.actualQuestion + 1, revealQuests: false }));
     }
+    dispatch(saveNewQuestionScore(points));
     this.timer();
   };
 
   handleDifficultyScore = (difficulty) => {
+    this.setState((prevState) => ({
+      assertions: prevState.assertions + 1,
+    }));
     if (difficulty === 'easy') {
       return 1;
     } if (difficulty === 'medium') {
@@ -109,14 +112,13 @@ class Game extends Component {
   };
 
   sumScorePoints = ({ target: { value } }) => {
-    const { dispatch } = this.props;
     const { revealQuests, actualQuestion, questions, time } = this.state;
     this.setState({ revealQuests: true }, () => {
       const { correct_answer: correctAnswer, difficulty } = questions[actualQuestion];
       if (!revealQuests && value === correctAnswer) {
         const scoreActualQuestion = TEN + (time * this.handleDifficultyScore(difficulty));
-        dispatch(saveNewQuestionScore(scoreActualQuestion));
-        dispatch(updateCorrectAnswers());
+        this.setState((prevState) => ({
+          points: prevState.points + scoreActualQuestion }));
       }
     });
   };
@@ -233,18 +235,14 @@ class Game extends Component {
   }
 }
 const mapStateToProps = (state) => ({
-  assertions: state.player.assertions,
   gravatarEmail: state.player.gravatarEmail,
   name: state.player.name,
-  score: state.player.score,
 });
 
 Game.propTypes = {
   dispatch: func.isRequired,
-  assertions: number.isRequired,
   name: string.isRequired,
   gravatarEmail: string.isRequired,
-  score: number.isRequired,
 };
 
 export default connect(mapStateToProps)(Game);

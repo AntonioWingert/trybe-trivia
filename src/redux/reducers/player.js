@@ -17,7 +17,7 @@ const player = (state = INITIAL_STATE, action) => {
   };
   case UPDATE_SCORE: return {
     ...state,
-    score: state.score + action.payload,
+    score: action.payload,
   };
   case SAVE_GRAVATAR: return {
     ...state,

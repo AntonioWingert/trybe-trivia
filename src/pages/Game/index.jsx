@@ -28,7 +28,7 @@ class Game extends Component {
     revealQuests: false,
     time: 30,
     intervalId: '',
-    points: '',
+    assertions: 0,
   };
 
   componentDidMount() {

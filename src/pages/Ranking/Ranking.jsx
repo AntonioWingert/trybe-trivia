@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { FaStar } from 'react-icons/fa';
+import triviaLogo from '../../assets/logoTrivia.png';
+import * as S from './style';
+
+const three = 3;
 
 class Ranking extends Component {
   state = {
@@ -27,31 +32,41 @@ class Ranking extends Component {
     const { players } = this.state;
 
     return (
-      <div>
-        <h1 data-testid="ranking-title">Ranking</h1>
-        <button
-          data-testid="btn-go-home"
-          type="button"
-        >
-          <Link to="/">Jogar Novamente</Link>
-        </button>
+      <S.MainContainer>
+        <S.Container>
+          <img src={ triviaLogo } alt="logo trivia" />
+          <h1 data-testid="ranking-title">Ranking</h1>
+          {
+            players.sort((a, b) => b.assertions - a.assertions)
+              .splice(0, three)
+              .map((player, index) => (
+                <div key={ player?.name }>
+                  <S.PlayerContainer>
+                    <img
+                      src={ this.createAvatarUrl(player?.gravatarEmail) }
+                      data-testid="header-profile-picture"
+                      alt="avatar-gravatar"
+                    />
+                    <p data-testid={ `player-name-${index}` }>{player?.name}</p>
+                  </S.PlayerContainer>
+                  <S.PointsContainer>
+                    <FaStar />
+                    <p data-testid={ `player-score-${index}` }>
+                      {`${player?.score} pontos`}
 
-        {
-          players.sort((a, b) => b.assertions - a.assertions)
-            .map((player, index) => (
-              <div key={ player?.name }>
-                <img
-                  src={ this.createAvatarUrl(player?.gravatarEmail) }
-                  data-testid="header-profile-picture"
-                  alt="avatar-gravatar"
-                />
-                <p>{player?.assertions}</p>
-                <p data-testid={ `player-name-${index}` }>{player?.name}</p>
-                <p data-testid={ `player-score-${index}` }>{player?.score}</p>
-              </div>
-            ))
-        }
-      </div>
+                    </p>
+                  </S.PointsContainer>
+                </div>
+              ))
+          }
+          <button
+            data-testid="btn-go-home"
+            type="button"
+          >
+            <Link to="/">Jogar Novamente</Link>
+          </button>
+        </S.Container>
+      </S.MainContainer>
     );
   }
 }

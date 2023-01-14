@@ -5,6 +5,8 @@ import { func, string } from 'prop-types';
 import Header from '../../components/Header';
 import fetchApi from '../../services/api';
 import { saveNewQuestionScore, updateCorrectAnswers } from '../../redux/Actions';
+import triviaLogo from '../../assets/logoTrivia.png';
+import * as S from './style';
 
 const RANDOM = 0.5;
 const INDEX = { count: -1 };
@@ -187,51 +189,59 @@ class Game extends Component {
     return (
       <section>
         <Header />
-        <section>
-          <p>
-            Tempo Restante:
-            {time}
-          </p>
-          <h2 data-testid="question-text">
-            {question}
-          </h2>
-          <h3
-            data-testid="question-category"
-          >
-            {category}
-          </h3>
-        </section>
-        <div data-testid="answer-options">
-          {randomAnswers.map((answer, index) => (
-            <button
-              type="button"
-              key={ index }
-              data-testid={
-                answer === correctAnswer
-                  ? 'correct-answer'
-                  : `wrong-answer-${this.handleIndex()}`
+        <S.MainContainer>
+          <S.QuestionContainer>
+            <img src={ triviaLogo } alt="logo-trivia" />
+            <div className="category">
+              <p data-testid="question-category">
+                {category}
+              </p>
+            </div>
+            <div className="question">
+              <h2 data-testid="question-text">
+                {question}
+              </h2>
+              <p>
+                {`Tempo: ${time}s`}
+              </p>
+            </div>
+          </S.QuestionContainer>
+          <S.QuestsContainer data-testid="answer-options">
+            <div>
+              {randomAnswers.map((answer, index) => (
+                <button
+                  type="button"
+                  key={ index }
+                  data-testid={
+                    answer === correctAnswer
+                      ? 'correct-answer'
+                      : `wrong-answer-${this.handleIndex()}`
+                  }
+                  value={ answer }
+                  className={ this.onClickReveal(answer) }
+                  disabled={ this.timerValidator() }
+                  onClick={ (event) => this.sumScorePoints(event) }
+                >
+                  {answer}
+                </button>
+              ))}
+              {
+                revealQuests || time === 0
+                  ? (
+                    <button
+                      type="button"
+                      onClick={ this.changeQuestion }
+                      data-testid="btn-next"
+                      className="next-button"
+                    >
+                      Next
+                    </button>
+                  ) : ''
               }
-              value={ answer }
-              className={ this.onClickReveal(answer) }
-              disabled={ this.timerValidator() }
-              onClick={ (event) => this.sumScorePoints(event) }
-            >
-              {answer}
-            </button>
-          ))}
-        </div>
-        {
-          revealQuests || time === 0
-            ? (
-              <button
-                type="button"
-                onClick={ this.changeQuestion }
-                data-testid="btn-next"
-              >
-                Next
-              </button>
-            ) : ''
-        }
+            </div>
+          </S.QuestsContainer>
+
+        </S.MainContainer>
       </section>
     );
   }

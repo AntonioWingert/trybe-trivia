@@ -1,23 +1,25 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import MainContainer from '../styles/FeedbackCard';
 
 class FeedbackCard extends Component {
   render() {
     const { assertions, score } = this.props;
     return (
-      <div>
-        <p>
-          {'Você acertou '}
-          <span data-testid="feedback-total-question">{assertions}</span>
-          {' Perguntas!'}
+      <MainContainer>
+
+        <p
+          data-testid="feedback-total-question"
+        >
+          {`Você acertou ${assertions} perguntas!`}
+
         </p>
-        <p>
-          {'Você fez '}
-          <span data-testid="feedback-total-score">{score}</span>
-          {' Pontos!'}
+
+        <p data-testid="feedback-total-score">
+          {`Você fez ${score} pontos`}
         </p>
-      </div>
+      </MainContainer>
     );
   }
 }

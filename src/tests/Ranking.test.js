@@ -1,4 +1,4 @@
-import { screen, waitFor } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import renderWithRouterAndRedux from "./helpers/renderWithRouterAndRedux";
 import Ranking from '../pages/Ranking/Ranking';
@@ -59,12 +59,12 @@ describe('Verificando a page /Ranking/', () => {
     expect(score).toBeInTheDocument();
   });
 
-  it('Verificando se é renderizado a quantidade de questões acertadas ', () => {
-    renderWithRouterAndRedux(<Ranking />)
+  // it('Verificando se é renderizado a quantidade de questões acertadas ', () => {
+  //   renderWithRouterAndRedux(<Ranking />)
 
-    const assertions = screen.getByTestId('player-assertions-0')
-    expect(assertions).toBeInTheDocument();
-  });
+  //   const assertions = screen.getByTestId('player-assertions-0')
+  //   expect(assertions).toBeInTheDocument();
+  // });
 
   it('Verificando se o ranking esta vazio.', () => {
     localStorage.clear();

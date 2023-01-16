@@ -18,6 +18,8 @@ class Ranking extends Component {
     });
   };
 
+  sorted = (arr) => arr.sort((a, b) => b.assertions - a.assertions);
+
   createAvatarUrl = (email) => {
     const urlGravatar = `https://www.gravatar.com/avatar/${email}`;
     return urlGravatar;
@@ -37,7 +39,7 @@ class Ranking extends Component {
         </button>
 
         {
-          players.sort((a, b) => b.assertions - a.assertions)
+          this.sorted(players)
             .map((player, index) => (
               <div key={ player?.name }>
                 <img
@@ -45,7 +47,7 @@ class Ranking extends Component {
                   data-testid="header-profile-picture"
                   alt="avatar-gravatar"
                 />
-                <p>{player?.assertions}</p>
+                <p data-testid={ `player-assertions-${index}` }>{player?.assertions}</p>
                 <p data-testid={ `player-name-${index}` }>{player?.name}</p>
                 <p data-testid={ `player-score-${index}` }>{player?.score}</p>
               </div>

@@ -24,7 +24,7 @@ describe('Verificando a page /Login/', () => {
   }); 
 
   it('Ao escrever o nome e o email o botão é habilitado', async () => {
-    const { history } = renderWithRouterAndRedux(<App />);
+    renderWithRouterAndRedux(<App />);
     const inputName = screen.getByPlaceholderText('Digite seu Nome');
     const inputEmail = screen.getByPlaceholderText(/Digite seu Email/i);
     const btn = screen.getByRole('button', {  name: /play/i});
@@ -34,8 +34,20 @@ describe('Verificando a page /Login/', () => {
     userEvent.type(inputEmail, 'miguel@novocomputador.com');
     expect(btn).toBeEnabled();
     userEvent.click(btn);
+    expect(await screen.findByRole('img', {  name: /avatar\-gravatar/i})).toBeInTheDocument();
+  });
 
+  it('Verifica se a função /fetchToken/ é chamada após o botão /Play/ ser clicado', async () => {
+    const { history } = renderWithRouterAndRedux(<App />);
+    const inputName = screen.getByPlaceholderText('Digite seu Nome');
+    const inputEmail = screen.getByPlaceholderText(/Digite seu Email/i);
+    const btn = screen.getByRole('button', {  name: /play/i});
+    
+    userEvent.type(inputName, 'miguelito');
+    userEvent.type(inputEmail, 'miguel@novocomputador.com');
+    userEvent.click(btn);
+    
     expect(await screen.findByRole('img', {  name: /avatar\-gravatar/i})).toBeInTheDocument();
     expect(history.location.pathname).toBe('/game');
-    });
+  });
 });

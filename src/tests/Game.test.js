@@ -50,7 +50,7 @@ describe('Teste da pagina de jogo', () => {
         userEvent.click(SelectFourthAnswer);
         userEvent.click(await screen.findByRole('button', { name: 'Next' }));
 
-        const SelectFifthAnswer= await screen.findByRole('button', { name: '10' });
+        const SelectFifthAnswer= await screen.findByRole('button', { name: '8' });
         userEvent.click(SelectFifthAnswer);
         userEvent.click(await screen.findByRole('button', { name: 'Next' }));
         expect(history.location.pathname).toBe('/feedback');
@@ -84,7 +84,5 @@ describe('Teste a aplicação com um token inválido', () => {
         act(() => {
             history.push('/game')
         })
-
-        console.log(history.location.pathname);
     });
 });

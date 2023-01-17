@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { Component } from 'react';
 import Container from './style';
 
@@ -13,5 +12,3 @@ class Settings extends Component {
 }
 
 export default Settings;
-=======
->>>>>>> main-group-20

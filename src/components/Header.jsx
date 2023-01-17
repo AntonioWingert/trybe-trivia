@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -55,5 +54,3 @@ Header.propTypes = {
 };
 
 export default connect(mapStateToProps)(Header);
-=======
->>>>>>> main-group-20

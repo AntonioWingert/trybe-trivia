@@ -1,11 +1,10 @@
-<<<<<<< HEAD
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { number, string } from 'prop-types';
 import { connect } from 'react-redux';
-import FeedbackCard from '../../components/FeedbackCard';
 import * as S from '../../styles/Feedback';
 import triviaLogo from '../../assets/logoTrivia.png';
+import FeedbackCard from '../../components/FeedbackCard';
 
 const THREE = 3;
 
@@ -68,5 +67,3 @@ Feedback.propTypes = {
 };
 
 export default connect(mapStateToProps)(Feedback);
-=======
->>>>>>> main-group-20

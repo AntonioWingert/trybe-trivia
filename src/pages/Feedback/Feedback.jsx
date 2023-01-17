@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { number, string } from 'prop-types';
 import { connect } from 'react-redux';
+import * as S from '../../styles/Feedback';
+import triviaLogo from '../../assets/logoTrivia.png';
 import FeedbackCard from '../../components/FeedbackCard';
-import Header from '../../components/Header';
 
 const THREE = 3;
 
@@ -12,35 +13,44 @@ class Feedback extends Component {
     const { gravatarUser, assertions } = this.props;
     const urlGravatar = `https://www.gravatar.com/avatar/${gravatarUser}`;
     return (
-      <div>
-        <Header />
+      <S.MainContainer>
         <img
-          src={ urlGravatar }
-          data-testid="header-profile-picture"
-          alt="avatar-gravatar"
+          src={ triviaLogo }
+          alt="Trivia Logo"
         />
-        {assertions < THREE ? (
-          <h3 data-testid="feedback-text">Could be better...</h3>)
-          : (<h3 data-testid="feedback-text">Well Done!</h3>)}
-        <div>
-          <div data-testid="feedback-text">
-            <FeedbackCard />
-          </div>
-        </div>
-        <button
-          type="button"
-          data-testid="btn-play-again"
-        >
-          <Link to="/">Play Again</Link>
-        </button>
+        <S.FeedbackContainer>
+          <img
+            src={ urlGravatar }
+            data-testid="header-profile-picture"
+            alt="avatar-gravatar"
+            className={ assertions < THREE ? 'cbb-img' : '' }
 
-        <button
-          type="button"
-          data-testid="btn-ranking"
-        >
-          <Link to="/ranking">Ranking</Link>
-        </button>
-      </div>
+          />
+          <div>
+            {assertions < THREE ? (
+              <h3 data-testid="feedback-text" className="cbb">Could be better...</h3>)
+              : (<h3 data-testid="feedback-text">Well Done!</h3>)}
+            <div data-testid="feedback-text">
+              <FeedbackCard />
+            </div>
+          </div>
+        </S.FeedbackContainer>
+        <S.ButtonsContainer>
+          <button
+            type="button"
+            data-testid="btn-ranking"
+          >
+            <Link to="/ranking">Ranking</Link>
+          </button>
+          <button
+            type="button"
+            data-testid="btn-play-again"
+            className="play-again"
+          >
+            <Link to="/">Play Again</Link>
+          </button>
+        </S.ButtonsContainer>
+      </S.MainContainer>
     );
   }
 }

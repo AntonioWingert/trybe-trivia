@@ -4,7 +4,6 @@ import App from '../App';
 import { invalidTokenQuestionsResponse } from '../../cypress/mocks/questions';
 import { INITIAL_STATE_GAME, USER_PLAYER_MOCK } from './data/mockdata';
 import { renderWithRouterAndRedux } from './helpers/renderWithRouterAndRedux';
-import { wait } from '@testing-library/user-event/dist/utils';
 import { act } from 'react-dom/test-utils';
 
 describe('Teste da pagina de jogo', () => {

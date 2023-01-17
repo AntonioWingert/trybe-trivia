@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
-import { Link, Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import { MD5 } from 'crypto-js';
 import { connect } from 'react-redux';
 import propTypes from 'prop-types';
 import { saveDataOnStore, saveIconOnStore } from '../../redux/Actions';
+import * as S from './style';
+import trivia from '../../assets/logoTrivia.png';
+import SettingsButton from '../../components/SettingsButton';
 
 class Login extends Component {
   state = {
@@ -46,41 +49,39 @@ class Login extends Component {
   render() {
     const { name, email, redirectToGame } = this.state;
     return (
-      <form>
-        <input
-          type="text"
-          placeholder="Digite seu Nome"
-          data-testid="input-player-name"
-          name="name"
-          value={ name }
-          onChange={ this.handleChanger }
-        />
-        <input
-          type="email"
-          placeholder="Digite seu Email"
-          data-testid="input-gravatar-email"
-          name="email"
-          value={ email }
-          onChange={ this.handleChanger }
-
-        />
-        <button
-          type="button"
-          data-testid="btn-play"
-          disabled={ !name.length > 0 || !email.length > 0 }
-          onClick={ this.fetchToken }
-        >
-          Play
-
-        </button>
-        <button
-          type="button"
-          data-testid="btn-settings"
-        >
-          <Link to="/settings">Configurações</Link>
-        </button>
-        { redirectToGame && <Redirect to="/game" />}
-      </form>
+      <S.MainContainer>
+        <S.Container>
+          <img src={ trivia } alt="triviaImage" />
+          <S.FormContainer>
+            <input
+              type="text"
+              placeholder="Digite seu Nome"
+              data-testid="input-player-name"
+              name="name"
+              value={ name }
+              onChange={ this.handleChanger }
+            />
+            <input
+              type="email"
+              placeholder="Digite seu Email"
+              data-testid="input-gravatar-email"
+              name="email"
+              value={ email }
+              onChange={ this.handleChanger }
+            />
+            <button
+              type="button"
+              data-testid="btn-play"
+              disabled={ !name.length > 0 || !email.length > 0 }
+              onClick={ this.fetchToken }
+            >
+              Play
+            </button>
+            <SettingsButton />
+            { redirectToGame && <Redirect to="/game" />}
+          </S.FormContainer>
+        </S.Container>
+      </S.MainContainer>
     );
   }
 }

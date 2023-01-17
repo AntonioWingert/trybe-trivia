@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
+import Container from './style';
 
 class Settings extends Component {
   render() {
     return (
-      <div data-testid="settings-title">Deu bom</div>
+      <Container data-testid="settings-title">
+        <h1>EM CONSTRUÇÃO</h1>
+      </Container>
     );
   }
 }

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
@@ -258,3 +259,5 @@ Game.propTypes = {
 };
 
 export default connect(mapStateToProps)(Game);
+=======
+>>>>>>> main-group-20

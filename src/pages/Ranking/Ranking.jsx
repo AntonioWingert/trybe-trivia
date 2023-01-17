@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -71,3 +72,5 @@ class Ranking extends Component {
 }
 
 export default connect()(Ranking);
+=======
+>>>>>>> main-group-20

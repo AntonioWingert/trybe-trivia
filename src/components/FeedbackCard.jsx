@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -35,3 +36,5 @@ const mapStateToProps = ({ player: { assertions, score } }) => ({
 });
 
 export default connect(mapStateToProps)(FeedbackCard);
+=======
+>>>>>>> main-group-20

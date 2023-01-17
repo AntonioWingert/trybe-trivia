@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { number, string } from 'prop-types';
@@ -67,3 +68,5 @@ Feedback.propTypes = {
 };
 
 export default connect(mapStateToProps)(Feedback);
+=======
+>>>>>>> main-group-20

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { MD5 } from 'crypto-js';
@@ -91,3 +92,5 @@ Login.propTypes = {
 };
 
 export default connect()(Login);
+=======
+>>>>>>> main-group-20

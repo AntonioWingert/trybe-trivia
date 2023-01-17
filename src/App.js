@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import Feedback from './pages/Feedback/Feedback';
@@ -17,3 +18,5 @@ export default function App() {
     </Switch>
   );
 }
+=======
+>>>>>>> main-group-20

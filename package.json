@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "name": "trivia-react-redux",
   "version": "0.1.0",
@@ -76,3 +77,5 @@
     ]
   }
 }
+=======
+>>>>>>> main-group-20

@@ -179,6 +179,12 @@ class Game extends Component {
     clearInterval(intervalId);
   };
 
+  decodeHtml = (html) => {
+    const txt = document.createElement('textarea');
+    txt.innerHTML = html;
+    return txt.value;
+  };
+
   render() {
     const { redirectToFeedback, redirectToLogin, randomAnswers, actualQuestion,
       questions, revealQuests, time } = this.state;
@@ -200,7 +206,7 @@ class Game extends Component {
             </div>
             <div className="question">
               <h2 data-testid="question-text">
-                {question}
+                {this.decodeHtml(question)}
               </h2>
               <p>
                 {`Tempo: ${time}s`}
@@ -223,7 +229,7 @@ class Game extends Component {
                   disabled={ this.timerValidator() }
                   onClick={ (event) => this.sumScorePoints(event) }
                 >
-                  {answer}
+                  {this.decodeHtml(answer)}
                 </button>
               ))}
               {
